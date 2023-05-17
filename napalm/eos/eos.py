@@ -135,7 +135,9 @@ class EOSDriver(NetworkDriver):
         # Define locking method
         self.lock_disable = self.optional_args.pop("lock_disable", False)
 
-        self.force_cfg_session_invalid = self.optional_args.pop("force_cfg_session_invalid", False)
+        self.force_cfg_session_invalid = self.optional_args.pop(
+            "force_cfg_session_invalid", False
+        )
 
         # eos_transport is there for backwards compatibility, transport is the preferred method
         transport = self.optional_args.get(
@@ -153,7 +155,6 @@ class EOSDriver(NetworkDriver):
         self.netmiko_optional_args = netmiko_args(optional_args)
 
     def _process_optional_args_eapi(self, optional_args):
-
         # Parse pyeapi transport class
         self.transport_class = self._parse_transport(self.transport)
 
@@ -903,7 +904,6 @@ class EOSDriver(NetworkDriver):
         return sorted([LLDP_CAPAB_TRANFORM_TABLE[c.lower()] for c in capabilities])
 
     def get_lldp_neighbors_detail(self, interface=""):
-
         lldp_neighbors_out = {}
 
         filters = []
@@ -1081,7 +1081,6 @@ class EOSDriver(NetworkDriver):
             return neighbor_dict
 
         def parse_options(options, default_value=False):
-
             if not options:
                 return {}
 
@@ -1326,7 +1325,6 @@ class EOSDriver(NetworkDriver):
         return ntp_stats
 
     def get_interfaces_ip(self):
-
         interfaces_ip = {}
 
         interfaces_ipv4_out = self._run_commands(["show ip interface"])[0]["interfaces"]
@@ -1423,7 +1421,6 @@ class EOSDriver(NetworkDriver):
         return interfaces_ip
 
     def get_mac_address_table(self):
-
         mac_table = []
 
         commands = ["show mac address-table"]
@@ -1721,7 +1718,6 @@ class EOSDriver(NetworkDriver):
         timeout=c.TRACEROUTE_TIMEOUT,
         vrf=c.TRACEROUTE_VRF,
     ):
-
         _HOP_ENTRY_PROBE = [
             r"\s+",
             r"(",  # beginning of host_name (ip_address) RTT group
@@ -1878,7 +1874,6 @@ class EOSDriver(NetworkDriver):
             )
 
             for item in peer_info:
-
                 # Determining a few other fields in the final peer_info
                 item["up"] = True if item["up"] == "up" else False
                 item["local_address_configured"] = (
@@ -1938,7 +1933,6 @@ class EOSDriver(NetworkDriver):
             return peer_details
 
         def _append(bgp_dict, peer_info):
-
             remote_as = peer_info["remote_as"]
             vrf_name = peer_info["routing_table"]
 
@@ -1991,7 +1985,6 @@ class EOSDriver(NetworkDriver):
             v6_peer_info = _parse_per_peer_bgp_detail(raw_output[1]["output"])
 
         for peer_info in v4_peer_info:
-
             vrf_name = peer_info["routing_table"]
             peer_remote_addr = peer_info["remote_address"]
             peer_info["accepted_prefix_count"] = (
@@ -2005,7 +1998,6 @@ class EOSDriver(NetworkDriver):
             _append(bgp_detail_info, peer_info)
 
         for peer_info in v6_peer_info:
-
             vrf_name = peer_info["routing_table"]
             peer_remote_addr = peer_info["remote_address"]
             peer_info["accepted_prefix_count"] = (
@@ -2021,7 +2013,6 @@ class EOSDriver(NetworkDriver):
         return bgp_detail_info
 
     def get_optics(self):
-
         command = ["show interfaces transceiver"]
 
         output = self._run_commands(command, encoding="json")[0]["interfaces"]
